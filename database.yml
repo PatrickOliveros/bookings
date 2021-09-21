@@ -1,0 +1,14 @@
+development:
+  dialect: postgres
+  database: bookings
+  user: appuser
+  password: secret
+  host: 192.168.50.146
+  port: 5433
+  pool: 5
+
+test:
+  url: {{envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@192.168.50.146:5433/bookings_test"}}
+
+production:
+  url: {{envOr "DATABASE_URL" "postgres://postgres:postgres@192.168.50.146:5433/bookings_production"}}

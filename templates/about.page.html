@@ -1,0 +1,16 @@
+{{template "xtemplate" .}}
+
+{{define "title"}}{{index .PageTitle}} | {{index .SiteSuffix}}{{end}}
+
+{{define "content"}}
+{{$testData := index .StringMap}}
+    {{range $key, $value := $testData}}
+    <div class="col d-flex align-items-start">
+        <svg class="bi text-muted flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#cpu-fill"/></svg>
+        <div>
+        <h4 class="fw-bold mb-0">{{$key}}</h4>
+        <p>{{$value}}</p>
+        </div>
+    </div>
+    {{end}}
+{{end}}

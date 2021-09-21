@@ -1,0 +1,199 @@
+{{define "base"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{template "title" .}} | {{.SiteSuffix}}</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+  <style>
+    .my-footer {
+      height: 5em;
+      background-color: #163b65;
+      margin-top: 1.5em;
+      padding: 1em;
+      color: white;
+      font-size: 80%;
+    }
+
+    .room-image {
+      max-width: 50%;
+    }
+
+    .notie-container {
+      box-shadow: none;
+    }
+
+    .datepicker {
+      z-index: 10000;
+    }
+  </style>
+
+  {{block "css" .}}
+  {{end}}
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Sample Go Web Application</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Rooms
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/rooms/generals-quarters">General's Quarters</a></li>
+              <li><a class="dropdown-item" href="/rooms/majors-suite">Major's Suite</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/reservations" tabindex="-1">Book Now</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact" tabindex="-1">Contact</a>
+          </li>
+          <li class="nav-item">
+            
+          {{if .IsAuthenticated}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/admin/dashboard">Admin Dashboard</a></li>
+            </ul>
+          </li>
+          {{end}}
+        </ul>
+        <div class="d-flex content-justify-right">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              {{if .IsAuthenticated}}
+                <span class="nav-link">Hello, {{.UserDisplayName}}!</span>
+            {{end}}
+            </li>
+            <li class="nav-item">
+              {{if .IsAuthenticated}}
+                <a class="nav-link" href="/logout" tabindex="-1">Logout</a>
+            {{else}}
+                <a class="nav-link" href="/login" tabindex="-1">Login</a>
+            {{end}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  {{block "content" .}}
+  {{end}}
+
+  {{block "footer" .}}
+  {{end}}
+
+  <footer class="my-footer">
+    <div class="row">
+      <div class="col">
+        left
+      </div>
+
+      <div class="col">
+        center
+      </div>
+
+      <div class="col">
+        right
+      </div>
+    </div>
+  </footer>
+
+  <!-- site wide JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+    integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+    integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/notie"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/js/datepicker-full.min.js"></script>
+  <script src="/static/scripts/app.js"></script>
+
+
+  {{block "js" .}}
+  {{end}}
+
+  <script>
+    let attention = Prompt();
+
+    (function () {
+      'use strict';
+      window.addEventListener('load', function () {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        let forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener('submit', function (event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+
+
+    function notify(msg, msgType) {
+      notie.alert({
+        type: msgType,
+        text: msg,
+      })
+    }
+
+    function notifyModal(title, text, icon, confirmationButtonText) {
+      Swal.fire({
+        title: title,
+        html: text,
+        icon: icon,
+        confirmButtonText: confirmationButtonText
+      })
+    }
+
+    {{with .Error}}
+    notify("{{.}}", "error")
+    {{end}}
+
+    {{with .Flash}}
+    notify("{{.}}", "success")
+    {{end}}
+
+    {{with .Warning}}
+    notify("{{.}}", "warning")
+    {{end}}
+
+  </script>
+
+</body>
+
+</html>
+{{end}}

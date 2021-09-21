@@ -1,0 +1,110 @@
+{{template "admin" .}}
+
+{{define "css"}}
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+{{end}}
+
+{{define "content"}}
+{{$res := index .Data "reservations"}}
+<div class="col-md-12">
+  <h1>Reservation #{{$res.Reference}}</h1>
+  <hr class="my-4">
+  <p>
+  <div class="row">
+    <div class="col-sm-6">
+      <span class="font-weight-bold">Arrival Date</span>
+    </div>
+    <div class="col-sm-6">
+      <span>{{calendarDate $res.StartDate}}</span>
+    </div>
+    <div class="col-sm-6">
+      <span class="font-weight-bold">Departure Date</span>
+    </div>
+    <div class="col-sm-6">
+      <span>{{calendarDate $res.EndDate}}</span>
+    </div>
+    <div class="col-sm-6">
+      <span class="font-weight-bold">Room Type</span>
+    </div>
+    <div class="col-sm-6">
+      <span>{{$res.Room.RoomName}}</span>
+    </div>
+  </div>
+  </p>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col-12">
+      <form action="/admin/reservation/{{$res.ID}}" method="post" novalidate>
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label for="first_name" class="form-label">First name</label>
+            <input type="text" class="form-control form-control-lg" name="first_name" id="first_name" placeholder=""
+              value="{{$res.FirstName}}" required>
+            <div class="invalid-feedback">
+              First name is required.
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="last_name" class="form-label">Last name</label>
+            <input type="text" class="form-control form-control-lg" name="last_name" id="last_name" placeholder=""
+              value="{{$res.LastName}}" required>
+            <div class="invalid-feedback">
+              Last name is required.
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control form-control-lg" name="email" id="email" placeholder=""
+              value="{{$res.Email}}" required>
+            <div class="invalid-feedback">
+              Email is required.
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control form-control-lg" name="phone" id="phone" placeholder=""
+              value="{{$res.Phone}}" required>
+            <div class="invalid-feedback">
+              Phone is required.
+            </div>
+          </div>
+
+
+          <div class="col-12">
+            <hr class="my-4">
+            <div class="float-left">
+              <button type="submit" class="btn btn-primary">Save</button>
+              <a href="#!" onclick="window.history.go(-1);" class="btn btn-warning">Cancel</a>
+              <a href="#!" onclick="processRes({{$res.ID}})" class="btn btn-info">Mark as Processed</a>
+            </div>
+            <div class="float-right">
+              <a href="" class="btn btn-danger">Delete</a>
+            </div></div>
+          <div class="clearfix"></div>
+      </form>
+    </div>
+  </div>
+</div>
+{{end}}
+
+{{define "js"}}
+<script>
+  function processRes(id) {
+    attention.custom({
+      icon: 'warning',
+      msg: 'Are you sure?',
+      callback: function (result) {
+        if (result !== false) {
+          window.location.href = "/admin/process-reservation/" + id;
+        }
+      }
+    })
+  }
+</script>
+{{end}}
+
+{{define "title"}}{{.PageTitle}}{{end}}
